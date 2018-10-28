@@ -1,12 +1,9 @@
 """Various python classes for rsr package
-Author: Cyril Grima <cyril.grima@gmail.com>
 """
 
 import numpy as np
-import pdf, fit, invert
+from . import invert
 import matplotlib.pyplot as plt
-from scipy import interpolate, stats
-from astroML.plotting import hist
 import subradar as sr
 
 
@@ -74,12 +71,11 @@ class Statfit:
         histtype='stepfilled', xlim=None):
         """Plot histogram and pdf
         """
-        if xlim is None: xlim = [np.min(self.edges), np.max(self.edges)]
         if bins is None: bins = self.bins
 
-        x = np.linspace(xlim[0], xlim[1], fbins)
-        hist(self.sample, bins=bins, color=color, edgecolor=color,
-             alpha=alpha, histtype=histtype, normed=True, range=xlim)
+        foo, edges, bar = plt.hist(self.sample, bins=bins, density=True)
+        x = [ val-(val-edges[i-1])/2. for i, val in enumerate(edges) ][1:]
+
         plt.plot(x, self.func(self.values, x, method=method), color=color,
                  ls=ls, linewidth=2)
         plt.xlim(xlim)
