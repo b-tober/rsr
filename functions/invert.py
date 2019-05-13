@@ -3,7 +3,7 @@ Author: Cyril Grima <cyril.grima@gmail.com>
 """
 
 import numpy as np
-import subradar as sr
+import functions.subradar as sr
 from scipy import constants as ct
 
 

@@ -4,7 +4,7 @@
 import numpy as np
 from . import invert
 import matplotlib.pyplot as plt
-import subradar as sr
+import functions.subradar as sr
 import multiprocessing
 
 
