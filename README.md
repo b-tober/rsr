@@ -17,25 +17,27 @@ numpy > 1.11.0
 
 ```python
 
-import rsr
+import functions as rsr
 import numpy as np
 import matplotlib.pyplot as plt
-%pylab
+#pylab
 
 # Load data (example is non-calibrated surface echo linear amplitudes from SHARAD orbit 0887601)
-data = np.genfromtxt('rsr/data.txt', dtype=float, delimiter=',', names=True)
+data = np.genfromtxt('test/data.txt', dtype=float, delimiter=',', names=True)
 amp = data['amp']
 
 # Apply RSR to a given subset of amplitude.
 sample = amp[80000:85000]
 f = rsr.run.processor(sample, fit_model='hk')
 f.plot() # Plot results
+plt.show()
 
 # Apply RSR along a vector of successive amplitude.
 # The RSR is applied on windows made of 1000 values. Each window is separated by
 # 500 samples (can be time consuming).
 a = rsr.run.along(amp, winsize=1000, sampling=250, nbcores=2)
 rsr.utils.plot_along(a) # Plot results
+plt.show()
 ```
 
 
