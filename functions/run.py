@@ -113,12 +113,14 @@ def frames(x ,winsize=1000., sampling=250, **kwargs):
         Sampling step
     """
     # Window first and last id
-    xa = x[:np.int(x.size-winsize):np.int(sampling)]
-    xb = xa + winsize-1
+    xa = x[:np.int(x.size-winsize):np.int(sampling)]                # starting trace 
+    xb = xa + winsize-1                                             # ending trace
 
     # Cut last window in limb
     if xb[-1] > x[-1]: xb[-1] = x[-1]
-    xo = [val+(xb[i]-val)/2. for i, val in enumerate(xa)]
+    xo = [val+(xb[i]-val+1)/2. for i, val in enumerate(xa)]           # mid-window trace position
+    for i, val in enumerate(xa):
+        print(i, val, xa[i], xb[i],xo[i])
 
     # Output
     out = [ np.array([xa[i], xb[i]]).astype('int64') for i in np.arange(xa.size)  ]
@@ -183,6 +185,10 @@ def along(amp, nbcores=1, verbose=True, **kwargs):
             results = results.append(b, ignore_index=True)
         out = results
 
+        t2 = time.time()
+        if verbose is True:
+            print("- Processed in %.1f s.\n" % (t2-t1))
+
     # Do use the multiprocessing package
     if nbcores > 0:
         results = []
@@ -201,12 +207,14 @@ def along(amp, nbcores=1, verbose=True, **kwargs):
             b = {**a.values, **a.power(), 'crl':a.crl(), 'chisqr':a.chisqr,}
             out = out.append(b, ignore_index=True)
         out = out.sort_values('ID')
+        print(out)
 
         out['xa'] = w['xa']
         out['xb'] = w['xb']
         out['xo'] = w['xo']
+        print(out)
         out = out.drop('ID', 1)
-
+        print(out)
         t2 = time.time()
         if verbose is True:
             print("- Processed in %.1f s.\n" % (t2-t1))

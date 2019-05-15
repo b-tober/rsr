@@ -1,9 +1,17 @@
 import numpy as np
-import functions as rsr
+import rsr.functions as rsr
 #from pandas import DataFrame, read_csv
 import matplotlib.pyplot as plt
 import sys
+'''
+script to run rsr for input file with radar surface return amplitude
 
+example call:
+
+python -m rsr.main /home/btober/Documents/5050702_001_fret_geom.csv
+
+note: run from directory containing both subradar and rsr packages. use -m flag for relative import paths to work
+'''
 #----------------------------------------------------------
 
 
@@ -12,21 +20,20 @@ file_name = sys.argv[1]                                 # input geom file with s
 
 # Load data from geom file with surface reflectivity amplitude in last column
 data = np.genfromtxt(file_name, delimiter = ',', dtype = str)
-amp = data[:,-1]
+amp = data[:,-1].astype(float)
 
 # Apply RSR to a given subset of amplitude.
 # sample = amp[80000:85000]
-# f = rsr.run.processor(sample, fit_model='hk')
+# f = rsr.run.processor(amp, fit_model='hk')
 # f.plot() # Plot results
 # plt.show()
 
 # Apply RSR along a vector of successive amplitude.
 # The RSR is applied on windows made of 1000 values. Each window is separated by
 # 500 samples (can be time consuming).
-a = rsr.run.along(amp, winsize=1000, sampling=250, nbcores=2)
-rsr.utils.plot_along(a) # Plot results
-plt.show()
-```
+a = rsr.run.along(amp, winsize=10000, sampling=2500, nbcores=4)
+# rsr.utils.plot_along(a) # Plot results
+# plt.show()
 #----------------------------------------------------------
 
 #data_file = file_name + '.csv'
