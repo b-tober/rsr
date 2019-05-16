@@ -25,7 +25,7 @@ def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
     # Apply RSR along a vector of successive amplitude.
     # The RSR is applied on windows made of (winsize) values. Each window is separated by
     # (sampling) samples (can be time consuming).
-    w,a = rsr.run.along(amp, winsize=winsize, sampling=sampling, nbcores=2)
+    w,a = rsr.run.along(amp, winsize=winsize, sampling=sampling, nbcores=2,verbose=False)
 
     # rsr.utils.plot_along(a) # Plot results
     # plt.show()
