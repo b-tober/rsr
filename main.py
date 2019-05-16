@@ -33,7 +33,7 @@ def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
 
     # append rsr results to geom table at each window midpoint
     # slice original geom file and only keep necessary data - create new data header
-    header = str('column,latitude,longitude,sza,sref,')  + ','.join(str(x)for x in list(a))
+    header = str('column,longitude,latitude,sza,sref,')  + ','.join(str(x)for x in list(a))
     # append results of lmfit at xo coordinates to data file - using int(x), note: for 1000 winsize, xo would be 499.5 - forcing rsr results to be appended to physical trace location using int(xo) indices
     data = data[w['xo'].astype(int)[:],:]      
     data = data[:,[1,6,7,11]]            
