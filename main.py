@@ -11,7 +11,7 @@ python -m rsr.main /home/btober/Documents/5050702_001_fret_geom.csv
 
 note: run from directory containing both subradar and rsr packages. use -m flag for relative import paths to work
 '''
-def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
+def main(file_name, winsize=1000, sampling=250, nbcores=2, verbose=True):
     # Load data from geom file with surface reflectivity amplitude in last column
     data = np.genfromtxt(in_path + file_name, delimiter = ',', dtype = str)
     amp = data[:,-1].astype(float)
@@ -25,7 +25,7 @@ def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
     # Apply RSR along a vector of successive amplitude.
     # The RSR is applied on windows made of (winsize) values. Each window is separated by
     # (sampling) samples (can be time consuming).
-    w,a = rsr.run.along(amp, winsize=winsize, sampling=sampling, nbcores=2,verbose=True)
+    w,a = rsr.run.along(amp, winsize=winsize, sampling=sampling, nbcores=nbcores,verbose=verbose)
 
     # rsr.utils.plot_along(a) # Plot results
     # plt.show()
@@ -41,7 +41,7 @@ def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
 
     try:
         np.savetxt(out_path + file_name.split('_')[0] + '_' + file_name.split('_')[1] + '_rsr.csv', 
-        out, delimiter = ',', newline = '\n', comments = '', header = header,  fmt = '%s') 
+        out, delimiter = ',', newline = '\n', comments = '',header = header,  fmt = '%s') 
     except Exception as err:
         print(err)
 
