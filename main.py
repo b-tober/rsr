@@ -68,7 +68,7 @@ if __name__ == '__main__':
         mars_path = '/media/anomalocaris/Swaps' + mars_path
         in_path = '/media/anomalocaris/Swaps' + in_path
         out_path = '/media/anomalocaris/Swaps' + out_path
-    elif os.getcwd().split('/')[1] == 'mnt':False
+    elif os.getcwd().split('/')[1] == 'mnt':
         mars_path = '/mnt/d' + mars_path
         in_path = '/mnt/d' + in_path
         out_path = '/mnt/d' + out_path
