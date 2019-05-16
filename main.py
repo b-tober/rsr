@@ -11,9 +11,9 @@ python -m rsr.main /home/btober/Documents/5050702_001_fret_geom.csv
 
 note: run from directory containing both subradar and rsr packages. use -m flag for relative import paths to work
 '''
-def main(file_name):
+def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
     # Load data from geom file with surface reflectivity amplitude in last column
-    data = np.genfromtxt(file_name, delimiter = ',', dtype = str)
+    data = np.genfromtxt(in_path + file_name, delimiter = ',', dtype = str)
     amp = data[:,-1].astype(float)
 
     # Apply RSR to a given subset of amplitude.
@@ -25,7 +25,7 @@ def main(file_name):
     # Apply RSR along a vector of successive amplitude.
     # The RSR is applied on windows made of (winsize) values. Each window is separated by
     # (sampling) samples (can be time consuming).
-    w,a = rsr.run.along(amp, winsize=winsize, sampling=sampling, nbcores=4)
+    w,a = rsr.run.along(amp, winsize=winsize, sampling=sampling, nbcores=2)
 
     # rsr.utils.plot_along(a) # Plot results
     # plt.show()
@@ -50,9 +50,10 @@ if __name__ == '__main__':
     # ---------------
     # INPUTS - set to desired parameters
     # ---------------
-    study_area = 'bh_sh_bt/'  
+    study_area = 'edr_test/'  
     winsize = 1000              # window size for fit
     sampling = 500              # step size for fit along track
+    nbcores = 2
     # ---------------
     mars_path = '/MARS'
     in_path = mars_path + '/targ/xtra/SHARAD/EDR/surfPow/' + study_area
@@ -81,4 +82,4 @@ if __name__ == '__main__':
         pass
 
     file_name = sys.argv[1]     # input geom file with surface reflectivity for each trace
-    main(file_name)
+    main(file_name, winsize = winsize, sampling = sampling, nbcores = nbcores)
