@@ -39,7 +39,7 @@ def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
     data = data[:,[1,6,7,11]]            
     out = np.append(data, a, 1)                         
 
-    np.savetxt(out_path + file_name.split('_')[1] + '_' + file_name.split('_')[2] + '_rsr.csv', 
+    np.savetxt(out_path + file_name.split('_')[0] + '_' + file_name.split('_')[1] + '_rsr.csv', 
     out, delimiter = ',', newline = '\n', header = header, fmt = '%s') 
 
 
@@ -50,14 +50,14 @@ if __name__ == '__main__':
     # ---------------
     # INPUTS - set to desired parameters
     # ---------------
-    study_area = 'edr_test/'  
+    study_area = 'bh_nh_bt/'  
     winsize = 1000              # window size for fit
-    sampling = 500              # step size for fit along track
+    sampling = 250              # step size for fit along track
     nbcores = 2
     # ---------------
     mars_path = '/MARS'
     in_path = mars_path + '/targ/xtra/SHARAD/EDR/surfPow/' + study_area
-    out_path = mars_path + '/targ/xtra/SHARAD/EDR/rsr/' + study_area
+    out_path = mars_path + '/targ/xtra/SHARAD/rsr/' + study_area
 
     if os.getcwd().split('/')[1] == 'media':
         mars_path = '/media/anomalocaris/Swaps' + mars_path
