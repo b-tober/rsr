@@ -39,9 +39,13 @@ def main(file_name,winsize = 1000, sampling = 250, nbcores = 2):
     data = data[:,[1,6,7,11]]            
     out = np.append(data, a, 1)                         
 
-    np.savetxt(out_path + file_name.split('_')[0] + '_' + file_name.split('_')[1] + '_rsr.csv', 
-    out, delimiter = ',', newline = '\n', header = header, fmt = '%s') 
+    try:
+        np.savetxt(out_path + file_name.split('_')[0] + '_' + file_name.split('_')[1] + '_rsr.csv', 
+        out, delimiter = ',', newline = '\n', header = header, fmt = '%s') 
+    except Exception as err:
+        print(err)
 
+    print(file_name.split('_')[0] + '_' + file_name.split('_')[1] + ' processing done!')
 
     return
 
@@ -50,7 +54,7 @@ if __name__ == '__main__':
     # ---------------
     # INPUTS - set to desired parameters
     # ---------------
-    study_area = 'bh_nh_bt/'  
+    study_area = 'edr_test/'  
     winsize = 1000              # window size for fit
     sampling = 250              # step size for fit along track
     nbcores = 2
