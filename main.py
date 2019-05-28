@@ -54,10 +54,10 @@ if __name__ == '__main__':
     # ---------------
     # INPUTS - set to desired parameters
     # ---------------
-    study_area = 'bh_nh_bt/'  
+    study_area = str(sys.argv[1]) + '/'  
     winsize = 1000              # window size for fit
     sampling = 250              # step size for fit along track
-    nbcores = 2
+    nbcores = sys.argv[2]       # number of cores to run in parallel
     verbose = False             # report results of fit if true
     # ---------------
     mars_path = '/MARS'
@@ -86,5 +86,5 @@ if __name__ == '__main__':
     except FileExistsError:
         pass
 
-    file_name = sys.argv[1]     # input geom file with surface reflectivity for each trace
+    file_name = sys.argv[3]     # input geom file with surface reflectivity for each trace
     main(file_name, winsize=winsize, sampling=sampling, nbcores=nbcores, verbose=verbose)
