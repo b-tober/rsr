@@ -40,8 +40,10 @@ def main(file_name, winsize=1000, sampling=250, nbcores=2, verbose=True):
     out = np.append(data, a, 1)                         
 
     try:
-        np.savetxt(out_path + file_name.split('_')[0] + '_' + file_name.split('_')[1] + '_rsr.csv', 
-        out, delimiter = ',', newline = '\n', comments = '',header = header,  fmt = '%s') 
+        if data_set == 'stack':
+            np.savetxt(out_path + file_name.split('_')[0] + '_' + file_name.split('_')[1] + '_stack_rsr.csv', out, delimiter = ',', newline = '\n', comments = '',header = header,  fmt = '%s') 
+        else:
+            np.savetxt(out_path + file_name.split('_')[0] + '_' + file_name.split('_')[1] + '_rsr.csv', out, delimiter = ',', newline = '\n', comments = '',header = header,  fmt = '%s') 
     except Exception as err:
         print(err)
 
@@ -80,11 +82,19 @@ if __name__ == '__main__':
         print('Data path not found')
         sys.exit()
 
+
+    file_name = sys.argv[3]                     # input geom file with surface reflectivity for each trace
+
+    if ('stack' in file_name):                  # check if using stacked data, and modify out path
+        data_set = 'stack'
+        out_path = out_path + data_set + '/'
+    else:
+        data_set == 'amp'
+    
     # create necessary output directories if nonexistent
     try:
         os.makedirs(out_path)
     except FileExistsError:
         pass
 
-    file_name = sys.argv[3]     # input geom file with surface reflectivity for each trace
     main(file_name, winsize=winsize, sampling=sampling, nbcores=nbcores, verbose=verbose)
