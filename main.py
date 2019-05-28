@@ -7,7 +7,11 @@ script to run rsr for input file with radar surface return amplitude
 
 example call:
 
-python -m rsr.main /home/btober/Documents/5050702_001_fret_geom.csv
+python -m rsr.main [study_area] [number_cores] [surface_power_geom_file]
+
+[argv1] is study region
+[argv2] is the number of threads to use
+[argv3] is the surface amplitude data, along with navigation csv file
 
 note: run from directory containing both subradar and rsr packages. use -m flag for relative import paths to work
 '''
