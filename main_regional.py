@@ -20,23 +20,29 @@ def main(file_name):
 
     data_file = in_path + file_name
 
-    print('\nProcessing regional RSR: ' + file_name + '!\n')
+    print('\nProcessing regional RSR: ' + file_name + '\n')
 
-    amp = np.genfromtxt(data_file, delimiter = ',', dtype = float, skip_header=1)             # import amplitude data
+    data = np.genfromtxt(data_file, delimiter = ',', dtype = float, names=True)                 # import amplitude data
 
-    # Apply RSR to regional amplitude data
+    amp = data['sref']
 
-    f = rsr.fit.lmfit(amp[:10000], fit_model='hk', bins='knuth')
-    f.report() # display result
-    f.plot(method='analytic') # plot results.
-    plt.savefig('test.png') # save plot
-    np.savetxt(out_path + file_name.rstrip('sref_sza100+.csv') + 'rsr.csv', f, delimiter = ',') # save rsr output
+    amp = amp[~np.isnan(amp)]
 
-	t1 = time.time()        # end time
+    [f,out] = rsr.run.processor(amp, fit_model='hk')                                            # apply RSR to regional amplitude data
 
-	print('--------------------------------')
-	print('Total Runtime: ' + str(round((t1 - t0),4)) + ' seconds')
-	print('--------------------------------')
+    f.plot(method='analytic')                                                                   # plot results
+
+    plt.savefig(out_path + file_name.split('_')[2] + '_rsr.png')                                # save plot
+
+    with open(out_path + file_name.split('_')[2] + '_rsr.txt','w') as fOut:                     # save rsr output
+        fOut.write(out)
+    
+    
+    t1 = time.time()                                                                            # end time
+    
+    print('--------------------------------')
+    print('Total Runtime: ' + str(round((t1 - t0),4)) + ' seconds')
+    print('--------------------------------')
     return
 
 if __name__ == '__main__':
@@ -62,23 +68,26 @@ if __name__ == '__main__':
         mars_path = '/disk/qnap-2' + mars_path
         in_path = '/disk/qnap-2' + in_path
         out_path = '/disk/qnap-2' + out_path
+    elif os.getcwd().split('/')[1] == 'home':
+        mars_path = '/home/btober/Documents' + mars_path
+        in_path = '/home/btober/Documents' + in_path
+        out_path = '/home/btober/Documents' + out_path
     else:
         print('Data path not found')
         sys.exit()
 
 
-    file_name = sys.argv[2]                     # input geom file with surface reflectivity for each trace
+    file_name = sys.argv[2]                                                                     # input file with surface reflectivity for each trace
 
-    if ('stack' in file_name):                  # check if using stacked data, and modify out path
+    if ('stack' in file_name):                                                                  # check if using stacked data, and modify out path
         data_set = 'stack'
         out_path = out_path + data_set + '/'
     else:
-        data_set == 'amp'
+        data_set = 'amp'
     
-    # create necessary output directories if nonexistent
     try:
-        os.makedirs(out_path)
+        os.makedirs(out_path)                                                                   # create necessary output directories if nonexistent
     except FileExistsError:
         pass
 
-    main(file_name, winsize=winsize, sampling=sampling, nbcores=nbcores, verbose=verbose)
+    main(file_name)

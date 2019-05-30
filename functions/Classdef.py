@@ -115,6 +115,7 @@ class Statfit:
 
         out = "".join(buff)
         print(out)
+        return out
 
 
     def flag(self):

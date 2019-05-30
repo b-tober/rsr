@@ -93,7 +93,7 @@ if __name__ == '__main__':
         data_set = 'stack'
         out_path = out_path + data_set + '/'
     else:
-        data_set == 'amp'
+        data_set = 'amp'
     
     # create necessary output directories if nonexistent
     try:
