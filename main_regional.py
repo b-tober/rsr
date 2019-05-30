@@ -1,40 +1,84 @@
 import numpy as np
-import functions as rsr
-from pandas import DataFrame, read_csv
+import rsr.functions as rsr
 import matplotlib.pyplot as plt
-import sys
-#from config import *
-#pylab
+import sys,os,time
+'''
+script to run regional rsr for input file with radar surface return amplitude
 
-path = '/disk/qnap-2/MARS/targ/xtra/rsr/bh_nh_bt/fret_sza100+_merged/low/'
+example call:
+
+python -m rsr.main_regional [study_area] [surface_power_file]
+
+[argv1] is study region
+[argv2] is the surface amplitude data, along with navigation csv file
+
+note: run from directory containing both subradar and rsr packages. use -m flag for relative import paths to work
+'''
+def main(file_name):
+
+    t0 = time.time()                                                                            # begin time
+
+    data_file = in_path + file_name
+
+    print('\nProcessing regional RSR: ' + file_name + '!\n')
+
+    amp = np.genfromtxt(data_file, delimiter = ',', dtype = float, skip_header=1)             # import amplitude data
+
+    # Apply RSR to regional amplitude data
+
+    f = rsr.fit.lmfit(amp[:10000], fit_model='hk', bins='knuth')
+    f.report() # display result
+    f.plot(method='analytic') # plot results.
+    plt.savefig('test.png') # save plot
+    np.savetxt(out_path + file_name.rstrip('sref_sza100+.csv') + 'rsr.csv', f, delimiter = ',') # save rsr output
+
+	t1 = time.time()        # end time
+
+	print('--------------------------------')
+	print('Total Runtime: ' + str(round((t1 - t0),4)) + ' seconds')
+	print('--------------------------------')
+    return
+
+if __name__ == '__main__':
+    # get correct data paths if depending on current OS
+    # ---------------
+    # INPUTS - set to desired parameters
+    # ---------------
+    study_area = str(sys.argv[1]) + '/'  
+    # ---------------
+    mars_path = '/MARS'
+    in_path = mars_path + '/targ/xtra/SHARAD/EDR/surfPow/' + study_area + 'regional/'
+    out_path = mars_path + '/targ/xtra/SHARAD/rsr/' + study_area + 'regional/'
+
+    if os.getcwd().split('/')[1] == 'media':
+        mars_path = '/media/anomalocaris/Swaps' + mars_path
+        in_path = '/media/anomalocaris/Swaps' + in_path
+        out_path = '/media/anomalocaris/Swaps' + out_path
+    elif os.getcwd().split('/')[1] == 'mnt':
+        mars_path = '/mnt/d' + mars_path
+        in_path = '/mnt/d' + in_path
+        out_path = '/mnt/d' + out_path
+    elif os.getcwd().split('/')[1] == 'disk':
+        mars_path = '/disk/qnap-2' + mars_path
+        in_path = '/disk/qnap-2' + in_path
+        out_path = '/disk/qnap-2' + out_path
+    else:
+        print('Data path not found')
+        sys.exit()
 
 
-#file_name = sys.argv[1]
-#utils.inline_estim(file_name)
+    file_name = sys.argv[2]                     # input geom file with surface reflectivity for each trace
 
-file_name = 'fret_sza100+_low_merged'
+    if ('stack' in file_name):                  # check if using stacked data, and modify out path
+        data_set = 'stack'
+        out_path = out_path + data_set + '/'
+    else:
+        data_set == 'amp'
+    
+    # create necessary output directories if nonexistent
+    try:
+        os.makedirs(out_path)
+    except FileExistsError:
+        pass
 
-
-data_file = path + file_name + '.csv'
-
-print('\nProcessing: ' + data_file + '!\n')
-
-# Open data file - Surface echo is power is 13th column(values are powers in dB)
-file = np.genfromtxt(data_file, delimiter = ',', dtype = str)
-
-# convert signal into linear amplitude
-amp = 10**(file[:,12].astype(np.float64)/20)
-
-# Apply RSR to a given subset of amplitude
-
-f = rsr.fit.lmfit(amp, fit_model='hk', bins='knuth')
-f.report() # Display result
-f.plot(method='analytic') # Plot results.
-#np.savetxt('/disk/qnap-2/MARS/targ/xtra/rsr/bh_nh_bt/results4/med/rsr_results4_med_merged.csv', f, delimiter = ',')
-
-
-# Apply RSR along a vector of successive amplitude
-#utils.inline_estim(file_name)
-#print('winsize = ' + str(winsize) + '\nsampling = ' + str(sampling))
-#utils.plot_inline(b2) # Plot results
-#plt.show()
+    main(file_name, winsize=winsize, sampling=sampling, nbcores=nbcores, verbose=verbose)
