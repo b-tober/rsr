@@ -24,7 +24,7 @@ def scale(amp):
     """Provide a factor to scale a set of amplitudes between 0 and 1
     for correct rsr processing through fit.lmfit
     """
-    y, x = np.histogram(np.abs(amp), bins='fd', range=(np.nanmin(amp),np.nanmax(amp)))
+    y, x = np.histogram(np.abs(amp), bins='fd')
     pik = x[y.argmax()]
     out = 1/(pik*10)
     return out
@@ -77,7 +77,6 @@ def processor(amp, gain=0., bins='stone', fit_model='hk', scaling=True, **kwargs
         a.values['ID'] = kwargs['ID']
     else:
         a.values['ID'] = -1
-    print(pc,pn)
 
     return a,out
 
