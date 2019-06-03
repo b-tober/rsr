@@ -92,6 +92,7 @@ if __name__ == '__main__':
     if ('stack' in file_name):                  # check if using stacked data, and modify out path
         data_set = 'stack'
         out_path = out_path + data_set + '/'
+        in_path = in_path + data_set + '/'
     else:
         data_set = 'amp'
     

@@ -31,6 +31,7 @@ def main(file_name):
     [f,out] = rsr.run.processor(amp, fit_model='hk')                                            # apply RSR to regional amplitude data
 
     f.plot(method='analytic')                                                                   # plot results
+    plt.show()
 
     plt.savefig(out_path + file_name.split('_')[2] + '_rsr.png')                                # save plot
 
