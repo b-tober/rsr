@@ -63,8 +63,8 @@ if __name__ == '__main__':
     study_area = str(sys.argv[1]) + '/'  
     winsize = 1000              # window size for fit
     sampling = 250              # step size for fit along track
-    nbcores = 6       # number of cores to run in parallel
-    verbose = False             # report results of fit if true
+    nbcores = int(sys.argv[2])  # number of cores to run in parallel
+    verbose = True             # report results of fit if true
     # ---------------
     mars_path = '/MARS'
     in_path = mars_path + '/targ/xtra/SHARAD/EDR/surfPow/' + study_area
