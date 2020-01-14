@@ -63,7 +63,6 @@ def processor(amp, gain=0., bins='stone', fit_model='hk', scaling=True, **kwargs
 
     # Fit
     a = fit.lmfit( np.abs(amp), bins=bins, fit_model=fit_model)
-    out = a.report()
 
     # Remove Scaling
     pc = 10*np.log10( a.values['a']**2  ) - 20*np.log10(scale_amp)
@@ -78,7 +77,7 @@ def processor(amp, gain=0., bins='stone', fit_model='hk', scaling=True, **kwargs
     else:
         a.values['ID'] = -1
 
-    return a,out
+    return a
 
 
 def cb_processor(a):
@@ -91,7 +90,6 @@ def cb_processor(a):
         Results from "processor" (Statfit class)
     """
     p = a.power()
-    #print(p)
     print("#%d\tCorrelation: %.3f\tPt: %.1f dB   Pc: %.1f dB   Pn: %.1f dB" %
             (a.values['ID'], a.crl(), p['pt'], p['pc'], p['pn'] ) )
     return a
@@ -132,6 +130,7 @@ def frames(x ,winsize=1000., sampling=250, **kwargs):
 
 #@timing
 def along(amp, nbcores=1, verbose=True, **kwargs):
+
     """
     RSR applied on windows sliding along a vector of amplitudes
 
@@ -194,9 +193,8 @@ def along(amp, nbcores=1, verbose=True, **kwargs):
             async_inline = Async(processor, cb_processor, nbcores=nbcores)
         elif verbose is False:
             async_inline = Async(processor, None, nbcores=nbcores)
-
         for i in ID:
-            results.append( async_inline.call(args[i], **kwargs, ID=w['xo'][i]) )
+            results.append(async_inline.call(args[i], **kwargs, ID=w['xo'][i]) )
         async_inline.wait()
         # Sorting Results
         out = pd.DataFrame()

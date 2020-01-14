@@ -142,5 +142,3 @@ class Async:
     def wait(self):
         self.pool.close()
         self.pool.join()
-
-
