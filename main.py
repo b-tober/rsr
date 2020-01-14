@@ -51,8 +51,8 @@ def main(file_name, winsize=1000, sampling=250, nbcores=2, verbose=True):
 
     out = pd.concat([data.reset_index(drop=True), a.reset_index(drop=True)], axis=1)
 
-    # remove sref trace field to avoid confusion with rsr window stats
-    out = out.drop(columns = 'SREF')
+    # remove trace and sref trace field to avoid confusion with rsr window stats
+    out = out.drop(columns = ['TRACE','SREF'])
 
     out.columns = [x.upper() for x in out.columns]
 
